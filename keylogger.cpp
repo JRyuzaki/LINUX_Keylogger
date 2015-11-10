@@ -130,7 +130,7 @@ const std::string convertToUpper(std::string text){
 const std::string convertToLower(std::string text){
 	std::string lowerString = "";
 	for(char c : text){
-		lowerString += convertToLowerower(c);
+		lowerString += tolower(c);
 	}
 	lowerString += '\0';
 	return lowerString;
