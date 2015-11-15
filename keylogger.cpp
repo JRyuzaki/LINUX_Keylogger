@@ -35,8 +35,8 @@ struct LoggerMetaData{
 
 
 static void setLoggerOptions(struct LoggerMetaData*, std::ifstream&);	/*@brief Sets the LoggerMetaData with the values from the configfile*/
-const std::string convertToUpper(std::string);
-const std::string convertToLower(std::string);
+std::string convertToUpper(std::string);
+std::string convertToLower(std::string);
 
 int main(){
 	struct LoggerMetaData loggerMetaData;
@@ -122,18 +122,16 @@ static void setLoggerOptions(struct LoggerMetaData* loggerMetaData, std::ifstrea
 	}
 }
 
-const std::string convertToUpper(std::string text){
-	std::string upperString = "";
-	for(char c : text){
-		upperString += toupper(c);
-	}
-	return upperString;
+std::string convertToUpper(std::string text){
+	for(auto& c : text)
+		c = toupper(c);
+
+	return text;
 }
 
-const std::string convertToLower(std::string text){
-	std::string lowerString = "";
-	for(char c : text){
-		lowerString += tolower(c);
-	}
-	return lowerString;
+std::string convertToLower(std::string text){
+	for(auto& c : text)
+		c = tolower(c);
+
+	return text;
 }
