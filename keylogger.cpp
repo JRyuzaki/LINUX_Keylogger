@@ -10,7 +10,7 @@
 #include "parse.h"
 
 
-#define PATH_TO_CONFIG "/eetc/gnome-apps-relay.conf"
+#define PATH_TO_CONFIG "/etc/gnome-apps-relay.conf"
 #define STANDARD_OUTPUTPATH "test.txt"	
 #define STANDARD_KEYBOARD_EVENT_HOOK "/dev/input/by-id/../event0"
 
